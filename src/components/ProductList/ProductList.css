@@ -1,0 +1,129 @@
+.main-content {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1rem;
+    flex-wrap: wrap;
+    color: var(--text-color);
+}
+
+.filters {
+    flex: 0 0 250px;
+}
+
+.filter-category, .filter-type {
+    padding: 1rem;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--white);
+}
+
+.filters h2, .collections h2 {
+    font-size: 18px;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+
+.filter-category h3 {
+    margin-bottom: 1rem;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.filter-category label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.filter-category span {
+    font-size: 14px;
+}
+
+input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--accent-color);
+}
+
+.collections {
+    flex: 1;
+}
+
+.options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.sort-options select {
+    background-color: var(--white);
+    color: var(--black);
+    padding: 0.5rem;
+    font-family: "Poppins", sans-serif;
+}
+
+.products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+}
+
+.product-card {
+    text-align: center;
+    background-color: var(--white);
+    padding: 1rem;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
+}
+
+.product-image {
+    max-width: 100%;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.product-image:hover {
+    transform: scale(1.05);
+}
+
+.product-card h3 {
+    font-size: 16px;
+    margin: 10px 0 5px;
+    font-weight: 600;
+}
+
+.product-card p {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.product-card .product-price {
+    color: #1f93cb;
+}
+
+.no-result {
+    text-align: center;
+    width: 100%;
+    padding: 2rem;
+    font-size: 18px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-content {
+        flex-direction: column;
+    }
+
+    .filters {
+        width: 100%;
+        flex: auto;
+    }
+}

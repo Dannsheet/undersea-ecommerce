@@ -1,0 +1,179 @@
+:root {
+    --black: #050505;
+    --gray: #1a1a1a;
+    --white: #ffffff;
+    --accent-color: #ffffff;
+    --border-color: #333333;
+}
+
+.header-container {
+    background-color: var(--black, #050505);
+    color: var(--white, #ffffff);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.top-bar {
+    text-align: center;
+    padding: 8px 0;
+    font-size: 12px;
+}
+
+.main-nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px; /* Reducir padding vertical y horizontal */
+}
+
+.logo-container {
+    flex-grow: 1;
+    text-align: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none; /* Para que los iconos sigan siendo clickeables */
+    z-index: 1;
+}
+
+.logo-img {
+    height: 24px;
+    margin: 0 auto;
+    pointer-events: auto;
+}
+
+@media (max-width: 480px) {
+    .logo-img {
+        height: 18px;
+    }
+}
+
+
+.main-nav-container {
+    position: relative;
+}
+
+
+.categories-nav-desktop {
+    display: none; /* Oculto en móvil */
+}
+
+.nav-right-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.search-bar-desktop {
+    display: none; /* Oculto en móvil */
+    position: relative;
+}
+
+.search-input {
+    padding: 8px 40px 8px 15px;
+    border-radius: 20px;
+    border: 1px solid var(--border-color, #333);
+    background-color: var(--white, #fff);
+    color: var(--black, #000);
+}
+
+.search-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--black, #000);
+}
+
+.nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 22px;
+}
+
+
+.icon {
+    cursor: pointer;
+}
+
+.icon-link .icon, .icon-wrapper .icon {
+    color: var(--white, #ffffff);
+    display: block; /* Asegurar que no haya espacio extra */
+}
+
+.icon-wrapper {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.nav-links {
+    display: flex;
+    gap: 30px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-links a {
+    color: var(--white, #fff);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.menu-icon, .search-icon-mobile {
+    display: block;
+    cursor: pointer;
+}
+
+/* Media Query para pantallas grandes */
+@media (min-width: 1024px) {
+    .main-nav-container {
+        justify-content: flex-start;
+        margin-left: 40px; /* Mueve todo el nav un poco a la izquierda */
+        position: relative;
+    }
+    .logo-container {
+        position: static;
+        flex-basis: 180px; /* Ajusta el ancho del logo para mantener centrado visual */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: auto;
+    }
+    .categories-nav-desktop {
+        display: flex;
+        flex-grow: 1;
+        justify-content: center;
+        padding-left: 60px; /* Mueve las categorías más hacia la izquierda desde el centro */
+    }
+    .search-bar-desktop {
+        display: flex;
+    }
+    .menu-icon, .search-icon-mobile {
+        display: none;
+    }
+}

@@ -1,0 +1,39 @@
+.admin-breadcrumbs {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.breadcrumb-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-item:not(:last-child)::after {
+  content: '>';
+  margin: 0 0.6em;
+  color: #aaa;
+  font-size: 0.8rem;
+}
+
+.breadcrumb-item a {
+  color: #666;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.breadcrumb-item a:hover {
+  color: var(--primary-blue);
+}
+
+.breadcrumb-item.active {
+  color: #333;
+  font-weight: 500;
+}

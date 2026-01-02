@@ -1,0 +1,37 @@
+/*==============================
+   HERO Y FOOTER
+============================== */
+
+.footer {
+  padding: 3rem;
+  border-top: 1px solid rgba(111, 111, 109, 0.557);
+  font-size: 0.8rem;
+  background-color: var(--black);
+  color: var(--white);
+}
+
+.footer section {
+    text-align: center;
+}
+
+/* Estilos generales para las secciones */
+.second-section {
+  width: 100%;
+  padding: 2rem 0;
+  background-color: var(--background-color, #efefef);
+  text-align: center;
+}
+
+.featured-products {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.section-title h3 {
+  font-family: var(--font-title, 'Orbitron', sans-serif);
+  color: var(--black, #000000);
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+  letter-spacing: 2px;
+}

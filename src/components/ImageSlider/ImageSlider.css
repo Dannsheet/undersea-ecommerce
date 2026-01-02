@@ -1,0 +1,79 @@
+/* Imagenes rotativas */
+.slider-container {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100vh;
+  background-color: var(--gris, #808080);
+}
+
+.slider {
+  display: flex;
+  transition: transform 1s ease-in-out;
+  width: 100%;
+  height: 100%;
+}
+
+.slider-slide {
+  flex: 0 0 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.nav-container {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  padding: 0 20px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  opacity: 0;
+  transition: opacity .2s;
+}
+
+.slider-container:hover .nav-container {
+    opacity: 1;
+}
+
+.index-container {
+    display: flex;
+    gap: 10px;
+}
+
+.index-container > button {
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 50%;
+  background-color: rgba(255,255,255,.3);
+  transition: background-color .2s;
+  cursor: pointer;
+}
+
+.index-container > button:hover,
+.index-container > button.active {
+  background-color: rgba(255,255,255,.7);
+}
+
+button[data-index-change] {
+  font-size: 40px;
+  color: white;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+@media (max-width: 500px) {
+  .nav-container {
+    padding: 0 0 10px;
+  }
+  
+  .index-container {
+    gap: 20px;
+  }
+}
