@@ -1,50 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { supabase } from '../lib/supabaseClient';
 import './Auth.css';
 
 const ResetPassword = () => {
+  const token = (() => {
+    const url = new URL(window.location.href);
+    return (url.searchParams.get('token') || '').trim();
+  })();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(() =>
+    token ? null : 'El enlace de recuperación no es válido o ha expirado.'
+  );
   const [loading, setLoading] = useState(false);
-  const [ready, setReady] = useState(false);
+  const [ready] = useState(true);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const init = async () => {
-      setError(null);
-
-      try {
-        const url = new URL(window.location.href);
-        const code = url.searchParams.get('code');
-
-        if (code) {
-          const { error } = await supabase.auth.exchangeCodeForSession(code);
-          if (error) {
-            setError('El enlace de recuperación no es válido o ha expirado.');
-          }
-        } else {
-          const { error } = await supabase.auth.getSessionFromUrl({ storeSession: true });
-          if (error) {
-            setError('El enlace de recuperación no es válido o ha expirado.');
-          }
-        }
-
-        const { data } = await supabase.auth.getSession();
-        if (!data?.session) {
-          setError('El enlace de recuperación no es válido o ha expirado.');
-        }
-      } catch {
-        setError('No se pudo validar el enlace de recuperación.');
-      } finally {
-        setReady(true);
-      }
-    };
-
-    init();
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -62,12 +34,13 @@ const ResetPassword = () => {
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.updateUser({ password });
+    const { error } = await supabase.functions.invoke('reset-password-with-token', {
+      body: { token, newPassword: password },
+    });
 
     if (error) {
-      setError('No se pudo actualizar la contraseña. Intenta nuevamente.');
+      setError('El enlace de recuperación no es válido o ha expirado.');
     } else {
-      await supabase.auth.signOut();
       toast.success('Contraseña actualizada correctamente.');
       navigate('/login', { replace: true });
     }

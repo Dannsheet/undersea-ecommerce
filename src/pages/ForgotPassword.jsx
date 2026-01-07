@@ -12,14 +12,12 @@ const ForgotPassword = () => {
     e.preventDefault();
     const emailValue = (email || '').trim();
     if (!emailValue) return;
-
-    const redirectTo = `${window.location.origin}/reset-password`;
     const toastId = toast.loading('Enviando enlace...');
 
     navigate('/login');
 
-    const { error } = await supabase.auth.resetPasswordForEmail(emailValue, {
-      redirectTo,
+    const { error } = await supabase.functions.invoke('request-password-reset', {
+      body: { email: emailValue },
     });
 
     if (error) {
