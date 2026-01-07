@@ -129,6 +129,8 @@ const DetailsProduct = () => {
     const itemToAdd = {
       id: `${product.id}-${selectedColor}-${selectedSize}`,
       producto_id: product.id,
+      color: selectedColor,
+      talla: selectedSize,
       nombre: `${product.nombre} (${selectedColor} - ${selectedSize})`,
       precio: product.precio,
       imagen: mainImage,

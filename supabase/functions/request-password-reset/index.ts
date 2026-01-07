@@ -1,15 +1,31 @@
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3'
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': ((Deno.env.get('FRONTEND_URL') ?? '').trim().replace(/\/$/, '') || '*'),
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+const corsHeaders = (req: Request) => {
+  const frontendUrl = (Deno.env.get('FRONTEND_URL') ?? '').trim().replace(/\/$/, '')
+  const origin = (req.headers.get('origin') ?? '').trim()
+
+  const allowedOrigins = [
+    frontendUrl,
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'http://127.0.0.1:5173',
+    'http://127.0.0.1:5174',
+  ].filter(Boolean)
+
+  const allowOrigin = allowedOrigins.includes(origin) ? origin : frontendUrl || '*'
+
+  return {
+    'Access-Control-Allow-Origin': allowOrigin,
+    'Vary': 'Origin',
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  }
 }
 
-const jsonResponse = (body: unknown, status = 200) =>
+const jsonResponse = (req: Request, body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
     status,
   })
 
@@ -28,11 +44,11 @@ const sha256Hex = async (input: string) => {
 
 serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return new Response('ok', { headers: corsHeaders(req) })
   }
 
   if (req.method !== 'POST') {
-    return jsonResponse({ error: 'Method not allowed' }, 405)
+    return jsonResponse(req, { error: 'Method not allowed' }, 405)
   }
 
   try {
@@ -40,15 +56,23 @@ serve(async (req: Request) => {
     const email = String(payload?.email ?? '').trim().toLowerCase()
 
     if (!email) {
-      return jsonResponse({ error: 'Email is required' }, 400)
+      return jsonResponse(req, { error: 'Email is required' }, 400)
     }
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? ''
     const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    const frontendUrl = (Deno.env.get('FRONTEND_URL') ?? '').trim().replace(/\/$/, '')
+    const frontendUrlSecret = (Deno.env.get('FRONTEND_URL') ?? '').trim().replace(/\/$/, '')
+    const requestOrigin = (req.headers.get('origin') ?? '').trim().replace(/\/$/, '')
+    const frontendUrl = frontendUrlSecret || requestOrigin
 
     if (!supabaseUrl || !serviceRoleKey || !frontendUrl) {
-      return jsonResponse({ error: 'Server is not configured' }, 500)
+      const missing = {
+        SUPABASE_URL: !supabaseUrl,
+        SUPABASE_SERVICE_ROLE_KEY: !serviceRoleKey,
+        FRONTEND_URL_ORIGIN: !frontendUrl,
+      }
+      console.error('request-password-reset misconfigured:', missing)
+      return jsonResponse(req, { error: 'Server is not configured', missing }, 500)
     }
 
     const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey)
@@ -61,11 +85,11 @@ serve(async (req: Request) => {
 
     if (userError) {
       console.error('request-password-reset lookup error:', userError)
-      return jsonResponse({ ok: true }, 200)
+      return jsonResponse(req, { ok: true }, 200)
     }
 
     if (!userRow?.id) {
-      return jsonResponse({ ok: true }, 200)
+      return jsonResponse(req, { ok: true }, 200)
     }
 
     const tokenBytes = crypto.getRandomValues(new Uint8Array(32))
@@ -84,7 +108,7 @@ serve(async (req: Request) => {
 
     if (insertError) {
       console.error('request-password-reset insert error:', insertError)
-      return jsonResponse({ ok: true }, 200)
+      return jsonResponse(req, { ok: true }, 200)
     }
 
     const brevoApiKey = Deno.env.get('BREVO_API_KEY') ?? ''
@@ -93,7 +117,7 @@ serve(async (req: Request) => {
 
     if (!brevoApiKey || !senderEmail) {
       console.error('request-password-reset missing Brevo config')
-      return jsonResponse({ ok: true }, 200)
+      return jsonResponse(req, { ok: true }, 200)
     }
 
     const resetUrl = `${frontendUrl}/reset-password?token=${encodeURIComponent(token)}`
@@ -132,12 +156,12 @@ serve(async (req: Request) => {
     if (!brevoRes.ok) {
       const details = await brevoRes.text().catch(() => '')
       console.error('request-password-reset Brevo send error:', details)
-      return jsonResponse({ ok: true }, 200)
+      return jsonResponse(req, { ok: true }, 200)
     }
 
-    return jsonResponse({ ok: true }, 200)
+    return jsonResponse(req, { ok: true }, 200)
   } catch (error) {
     console.error('request-password-reset unexpected error:', error)
-    return jsonResponse({ ok: true }, 200)
+    return jsonResponse(req, { ok: true }, 200)
   }
 })

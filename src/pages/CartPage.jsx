@@ -2,6 +2,7 @@ import { useCart } from '../hooks/useCart';
 import { useAuth } from '../hooks/useAuth';
 import { Link } from 'react-router-dom';
 import emailjs from '@emailjs/browser';
+import { supabase } from '../lib/supabaseClient';
 import toast from 'react-hot-toast';
 import './CartPage.css';
 
@@ -18,13 +19,19 @@ const CartPage = () => {
 
     const adminPhoneNumber = '593963868146'; // <-- ACTION REQUIRED: REPLACE WITH YOUR REAL WHATSAPP NUMBER
 
+    const itemsForDb = cartItems.map((item) => ({
+      producto_id: item.producto_id,
+      color: item.color,
+      talla: item.talla,
+      cantidad: item.quantity,
+    }));
+
     // 1. Formatear mensaje para WhatsApp
     const orderItemsText = cartItems.map(item => 
       `- ${item.nombre} (x${item.quantity}) - $${(item.precio * item.quantity).toFixed(2)}`
     ).join('\n');
 
-    const whatsappMessage = `¡Nuevo pedido!\n\nCliente: ${profile.nombre || 'No especificado'}\nEmail: ${user.email}\n\nDetalles:\n${orderItemsText}\n\nTotal: $${cartTotal.toFixed(2)}`;
-    const whatsappUrl = `https://wa.me/${adminPhoneNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+    let orderId = null;
 
     // 2. Preparar y enviar email de confirmación
     const templateParams = {
@@ -35,6 +42,19 @@ const CartPage = () => {
     };
 
     try {
+
+      const { data: orderData, error: orderError } = await supabase.functions.invoke('create-order', {
+        body: { items: itemsForDb },
+      });
+
+      if (orderError) {
+        throw orderError;
+      }
+
+      orderId = orderData?.orderId || null;
+
+      const whatsappMessage = `¡Nuevo pedido!\n\nID: ${orderId || 'N/A'}\nCliente: ${profile.nombre || 'No especificado'}\nEmail: ${user.email}\n\nDetalles:\n${orderItemsText}\n\nTotal: $${cartTotal.toFixed(2)}`;
+      const whatsappUrl = `https://wa.me/${adminPhoneNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 
       await emailjs.send(
         import.meta.env.VITE_EMAILJS_SERVICE_ID,

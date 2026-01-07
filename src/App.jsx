@@ -23,6 +23,7 @@ import OrderListAdmin from './pages/admin/OrderListAdmin';
 import UserListAdmin from './pages/admin/UserListAdmin';
 import ProductEditPage from './pages/admin/ProductEditPage';
 import InventoryAdminPage from './pages/admin/InventoryAdminPage';
+import ReportsAdminPage from './pages/admin/ReportsAdminPage';
 import AuthRedirector from './components/AuthRedirector';
 import RecoveryRedirector from './components/RecoveryRedirector';
 
@@ -142,6 +143,7 @@ function App() {
               <Route path="orders" element={<OrderListAdmin />} />
               <Route path="users" element={<UserListAdmin />} />
               <Route path="inventory" element={<InventoryAdminPage />} />
+              <Route path="reports" element={<ReportsAdminPage />} />
             </Route>
           </Routes>
         </SiteWrapper>
