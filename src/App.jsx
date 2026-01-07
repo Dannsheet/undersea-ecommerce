@@ -24,6 +24,7 @@ import UserListAdmin from './pages/admin/UserListAdmin';
 import ProductEditPage from './pages/admin/ProductEditPage';
 import InventoryAdminPage from './pages/admin/InventoryAdminPage';
 import AuthRedirector from './components/AuthRedirector';
+import RecoveryRedirector from './components/RecoveryRedirector';
 
 import SideMenu from './components/SideMenu/SideMenu';
 import CartPage from './pages/CartPage';
@@ -104,6 +105,7 @@ function App() {
         <SideMenu isOpen={isMenuOpen} toggleMenu={toggleMenu} categories={categories} />
         <SiteWrapper visible={!loading}>
           <ConditionalNavbar toggleMenu={toggleMenu} categories={categories} />
+          <RecoveryRedirector />
           <AuthRedirector />
           <Routes>
             <Route path="/" element={<Home />} />

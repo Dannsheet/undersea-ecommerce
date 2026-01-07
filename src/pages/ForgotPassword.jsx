@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 import { supabase } from '../lib/supabaseClient';
 import './Auth.css';
 
@@ -8,6 +9,7 @@ const ForgotPassword = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,6 +27,8 @@ const ForgotPassword = () => {
       setError('No se pudo enviar el correo de recuperación. Intenta nuevamente.');
     } else {
       setSent(true);
+      toast.success('Si el correo está registrado, recibirás un enlace de recuperación.');
+      navigate('/login');
     }
 
     setLoading(false);
