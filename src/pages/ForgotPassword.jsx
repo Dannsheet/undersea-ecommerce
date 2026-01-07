@@ -6,32 +6,31 @@ import './Auth.css';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [sent, setSent] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
-    setSent(false);
-    setLoading(true);
+    const emailValue = (email || '').trim();
+    if (!emailValue) return;
 
     const redirectTo = `${window.location.origin}/reset-password`;
+    const toastId = toast.loading('Enviando enlace...');
 
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    navigate('/login');
+
+    const { error } = await supabase.auth.resetPasswordForEmail(emailValue, {
       redirectTo,
     });
 
     if (error) {
-      setError('No se pudo enviar el correo de recuperación. Intenta nuevamente.');
+      toast.error('No se pudo enviar el correo de recuperación. Intenta nuevamente.', {
+        id: toastId,
+      });
     } else {
-      setSent(true);
-      toast.success('Si el correo está registrado, recibirás un enlace de recuperación.');
-      navigate('/login');
+      toast.success('Si el correo está registrado, recibirás un enlace de recuperación.', {
+        id: toastId,
+      });
     }
-
-    setLoading(false);
   };
 
   return (
@@ -39,13 +38,6 @@ const ForgotPassword = () => {
       <form onSubmit={handleSubmit} className="auth-form">
         <h2>RECUPERAR CONTRASEÑA</h2>
         <p>Te enviaremos un enlace para restablecer tu contraseña.</p>
-
-        {error && <p className="auth-error">{error}</p>}
-        {sent && (
-          <p>
-            Si el correo está registrado, recibirás un enlace de recuperación en unos minutos.
-          </p>
-        )}
 
         <div className="form-group">
           <label htmlFor="email">Correo Electrónico</label>
@@ -58,8 +50,8 @@ const ForgotPassword = () => {
           />
         </div>
 
-        <button type="submit" className="auth-button" disabled={loading}>
-          {loading ? 'Enviando...' : 'Enviar enlace'}
+        <button type="submit" className="auth-button">
+          Enviar enlace
         </button>
 
         <p className="auth-switch">
