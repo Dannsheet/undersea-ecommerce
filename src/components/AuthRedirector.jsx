@@ -13,7 +13,7 @@ const AuthRedirector = () => {
 
   useEffect(() => {
     // Solo actuar si tenemos un perfil y estamos en la página de inicio
-    const authPages = ['/login', '/signup'];
+    const authPages = ['/login', '/signup', '/forgot-password', '/reset-password'];
 
     // Redirigir solo si el usuario está en una página de autenticación y obtiene un perfil.
     if (profile && authPages.includes(location.pathname)) {
