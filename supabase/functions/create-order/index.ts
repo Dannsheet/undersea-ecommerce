@@ -62,15 +62,18 @@ serve(async (req: Request) => {
     }
 
     const authHeader = req.headers.get('Authorization') ?? ''
+    const token = authHeader.replace(/^Bearer\s+/i, '').trim()
 
-    const supabaseUserClient = createClient(supabaseUrl, anonKey, {
-      global: { headers: { Authorization: authHeader } },
-    })
+    if (!token) {
+      return jsonResponse(req, { error: 'Unauthorized', details: 'Missing Bearer token' }, 401)
+    }
+
+    const supabaseUserClient = createClient(supabaseUrl, anonKey)
 
     const {
       data: { user },
       error: userError,
-    } = await supabaseUserClient.auth.getUser()
+    } = await supabaseUserClient.auth.getUser(token)
 
     if (userError) {
       console.error('create-order auth.getUser error:', userError)
