@@ -53,7 +53,21 @@ function App() {
       if (error) {
         console.error('Error fetching categories:', error);
       } else {
-        setCategories(data);
+        const normalizeName = (value) => (value || '').trim().toLowerCase();
+        const sortedCategories = [...(data || [])].sort((a, b) => {
+          const aName = normalizeName(a?.nombre);
+          const bName = normalizeName(b?.nombre);
+
+          const aIsCustomGear = aName === 'custom gear';
+          const bIsCustomGear = bName === 'custom gear';
+
+          if (aIsCustomGear && !bIsCustomGear) return 1;
+          if (!aIsCustomGear && bIsCustomGear) return -1;
+
+          return aName.localeCompare(bName);
+        });
+
+        setCategories(sortedCategories);
       }
     };
 
