@@ -8,7 +8,7 @@ import './CartPage.css';
 
 const CartPage = () => {
   const { cartItems, removeFromCart, updateQuantity, cartTotal, clearCart } = useCart();
-  const { user, profile } = useAuth(); // <-- Obtener el perfil del usuario
+  const { user, profile, session } = useAuth(); // <-- Obtener el perfil del usuario
 
   const handleCheckout = async () => {
 
@@ -43,8 +43,10 @@ const CartPage = () => {
 
     try {
 
+      const accessToken = session?.access_token;
       const { data: orderData, error: orderError } = await supabase.functions.invoke('create-order', {
         body: { items: itemsForDb },
+        headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
       });
 
       if (orderError) {
