@@ -52,13 +52,22 @@ const CartPage = () => {
       if (!accessToken) {
         throw new Error('Sesión inválida: no se encontró access_token');
       }
-      const { data: orderData, error: orderError } = await supabase.functions.invoke('create-order', {
-        body: { items: itemsForDb },
-        headers: { Authorization: `Bearer ${accessToken}` },
+
+      const functionUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-order`;
+      const response = await fetch(functionUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ items: itemsForDb }),
       });
 
-      if (orderError) {
-        throw orderError;
+      const orderData = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(orderData?.details || orderData?.error || 'No se pudo crear la orden.');
       }
 
       orderId = orderData?.orderId || null;

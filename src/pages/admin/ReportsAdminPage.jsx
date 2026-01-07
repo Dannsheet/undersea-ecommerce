@@ -66,18 +66,45 @@ const ReportsAdminPage = () => {
     reloadOrders();
   }, [reloadOrders]);
 
+  const invokeFunctionWithAuth = async (functionName, body) => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    const accessToken = session?.access_token;
+    if (!accessToken) {
+      throw new Error('Sesión inválida: no se encontró access_token');
+    }
+
+    const functionUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/${functionName}`;
+    const response = await fetch(functionUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(body || {}),
+    });
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(data?.details || data?.error || 'No se pudo ejecutar la acción.');
+    }
+
+    return data;
+  };
+
   const handleConfirm = async (orderId) => {
     setActionLoading(orderId);
     setError(null);
 
-    const { error } = await supabase.functions.invoke('confirm-order', {
-      body: { orderId },
-    });
-
-    if (error) {
-      setError(error.message || 'No se pudo confirmar el pedido.');
-    } else {
+    try {
+      await invokeFunctionWithAuth('confirm-order', { orderId });
       await reloadOrders();
+    } catch (error) {
+      setError(error.message || 'No se pudo confirmar el pedido.');
     }
 
     setActionLoading(null);
@@ -87,14 +114,11 @@ const ReportsAdminPage = () => {
     setActionLoading(orderId);
     setError(null);
 
-    const { error } = await supabase.functions.invoke('mark-order-unconfirmed', {
-      body: { orderId },
-    });
-
-    if (error) {
-      setError(error.message || 'No se pudo marcar como no confirmado.');
-    } else {
+    try {
+      await invokeFunctionWithAuth('mark-order-unconfirmed', { orderId });
       await reloadOrders();
+    } catch (error) {
+      setError(error.message || 'No se pudo marcar como no confirmado.');
     }
 
     setActionLoading(null);
