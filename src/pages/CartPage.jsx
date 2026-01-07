@@ -43,10 +43,18 @@ const CartPage = () => {
 
     try {
 
-      const accessToken = session?.access_token;
+      const {
+        data: { session: liveSession },
+      } = await supabase.auth.getSession();
+
+      const accessToken = liveSession?.access_token || session?.access_token;
+
+      if (!accessToken) {
+        throw new Error('Sesión inválida: no se encontró access_token');
+      }
       const { data: orderData, error: orderError } = await supabase.functions.invoke('create-order', {
         body: { items: itemsForDb },
-        headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+        headers: { Authorization: `Bearer ${accessToken}` },
       });
 
       if (orderError) {
