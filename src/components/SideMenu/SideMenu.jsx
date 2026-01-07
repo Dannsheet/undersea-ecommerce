@@ -14,6 +14,11 @@ const SideMenu = ({ isOpen, toggleMenu, categories }) => {
             .replace(/\s+/g, ' ');
 
     const sortedCategories = [...(categories || [])].sort((a, b) => {
+        const aOrder = Number.isFinite(a?.orden) ? a.orden : Number.POSITIVE_INFINITY;
+        const bOrder = Number.isFinite(b?.orden) ? b.orden : Number.POSITIVE_INFINITY;
+
+        if (aOrder !== bOrder) return aOrder - bOrder;
+
         const aName = normalizeName(a?.nombre);
         const bName = normalizeName(b?.nombre);
         const aSlug = normalizeSlug(a?.slug);

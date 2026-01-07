@@ -46,8 +46,9 @@ function App() {
     const fetchCategories = async () => {
       const { data, error } = await supabase
         .from('categorias')
-        .select('nombre, slug')
+        .select('nombre, slug, orden')
         .is('parent_id', null)
+        .order('orden', { ascending: true })
         .order('nombre', { ascending: true });
 
       if (error) {
@@ -60,6 +61,11 @@ function App() {
             .toLowerCase()
             .replace(/\s+/g, ' ');
         const sortedCategories = [...(data || [])].sort((a, b) => {
+          const aOrder = Number.isFinite(a?.orden) ? a.orden : Number.POSITIVE_INFINITY;
+          const bOrder = Number.isFinite(b?.orden) ? b.orden : Number.POSITIVE_INFINITY;
+
+          if (aOrder !== bOrder) return aOrder - bOrder;
+
           const aName = normalizeName(a?.nombre);
           const bName = normalizeName(b?.nombre);
 
