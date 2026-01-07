@@ -58,8 +58,13 @@ serve(async (req: Request) => {
       error: userError,
     } = await supabaseUserClient.auth.getUser()
 
-    if (userError || !user) {
-      return jsonResponse(req, { error: 'Unauthorized' }, 401)
+    if (userError) {
+      console.error('confirm-order auth.getUser error:', userError)
+      return jsonResponse(req, { error: 'Unauthorized', details: userError.message }, 401)
+    }
+
+    if (!user) {
+      return jsonResponse(req, { error: 'Unauthorized', details: 'No user in session' }, 401)
     }
 
     const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey)

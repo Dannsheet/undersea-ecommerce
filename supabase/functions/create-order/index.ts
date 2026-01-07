@@ -72,8 +72,13 @@ serve(async (req: Request) => {
       error: userError,
     } = await supabaseUserClient.auth.getUser()
 
-    if (userError || !user) {
-      return jsonResponse(req, { error: 'Unauthorized' }, 401)
+    if (userError) {
+      console.error('create-order auth.getUser error:', userError)
+      return jsonResponse(req, { error: 'Unauthorized', details: userError.message }, 401)
+    }
+
+    if (!user) {
+      return jsonResponse(req, { error: 'Unauthorized', details: 'No user in session' }, 401)
     }
 
     const payload = await req.json().catch(() => ({}))
