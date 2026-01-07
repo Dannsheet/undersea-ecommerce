@@ -11,6 +11,28 @@ const Navbar = ({ toggleMenu, categories }) => {
         const [searchQuery, setSearchQuery] = useState('');
         const navigate = useNavigate();
 
+    const normalizeSlug = (value) => (value || '').trim().toLowerCase();
+    const normalizeName = (value) =>
+        (value || '')
+            .trim()
+            .toLowerCase()
+            .replace(/\s+/g, ' ');
+
+    const sortedCategories = [...(categories || [])].sort((a, b) => {
+        const aName = normalizeName(a?.nombre);
+        const bName = normalizeName(b?.nombre);
+        const aSlug = normalizeSlug(a?.slug);
+        const bSlug = normalizeSlug(b?.slug);
+
+        const aIsCustomGear = aSlug === 'custom-gear' || aName === 'custom gear';
+        const bIsCustomGear = bSlug === 'custom-gear' || bName === 'custom gear';
+
+        if (aIsCustomGear && !bIsCustomGear) return 1;
+        if (!aIsCustomGear && bIsCustomGear) return -1;
+
+        return aName.localeCompare(bName);
+    });
+
     
     
     const handleSearchIconClick = () => {
@@ -41,7 +63,7 @@ const Navbar = ({ toggleMenu, categories }) => {
 
                 <nav className="categories-nav-desktop">
                     <ul className="nav-links">
-                        {categories.map(cat => (
+                        {sortedCategories.map(cat => (
                             <li key={cat.slug}>
                                 <Link to={`/categoria/${cat.slug}`}>{cat.nombre.toUpperCase()}</Link>
                             </li>
