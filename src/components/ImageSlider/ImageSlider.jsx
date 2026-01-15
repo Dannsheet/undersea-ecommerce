@@ -1,85 +1,127 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { supabase } from '../../lib/supabaseClient';
+import { getPublicImageUrl } from '../../lib/getPublicImageUrl';
 import './ImageSlider.css';
 
-const images = [
-    '/fondo-imagen-3.webp',
-    '/fondo-imagen-2.webp',
-    '/fondo-imagen-1.webp',
+const FALLBACK_ITEMS = [
+  { id: 'fallback-1', imageUrl: '/fondo-imagen-3.webp', titulo: '' },
+  { id: 'fallback-2', imageUrl: '/fondo-imagen-2.webp', titulo: '' },
+  { id: 'fallback-3', imageUrl: '/fondo-imagen-1.webp', titulo: '' },
 ];
 
+const TABLE_NAME = 'home_first_section_items';
+const BUCKET_NAME = 'home';
+
 const ImageSlider = () => {
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const timeoutRef = useRef(null);
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const carouselRef = useRef(null);
+  const intervalRef = useRef(null);
 
-    const resetTimeout = () => {
-        if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-        }
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchItems = async () => {
+      setLoading(true);
+
+      const { data, error } = await supabase
+        .from(TABLE_NAME)
+        .select('id, titulo, image_path, orden, activo')
+        .eq('activo', true)
+        .order('orden', { ascending: true });
+
+      if (!isMounted) return;
+
+      if (error) {
+        setItems([]);
+      } else {
+        const normalized = (data || [])
+          .map((row) => ({
+            id: row.id,
+            titulo: row.titulo || '',
+            imageUrl: getPublicImageUrl(row.image_path, BUCKET_NAME) || '',
+          }))
+          .filter((row) => !!row.imageUrl);
+
+        setItems(normalized);
+      }
+
+      setLoading(false);
     };
 
-    useEffect(() => {
-        resetTimeout();
-        timeoutRef.current = setTimeout(
-            () =>
-                setCurrentIndex((prevIndex) =>
-                    prevIndex === images.length - 1 ? 0 : prevIndex + 1
-                ),
-            5000
-        );
+    fetchItems();
 
-        return () => {
-            resetTimeout();
-        };
-    }, [currentIndex]);
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
-    const goToSlide = (slideIndex) => {
-        setCurrentIndex(slideIndex);
+  const displayItems = useMemo(() => {
+    return items.length > 0 ? items : FALLBACK_ITEMS;
+  }, [items]);
+
+  useEffect(() => {
+    const container = carouselRef.current;
+    if (!container) return;
+    if (displayItems.length <= 1) return;
+
+    const prefersReducedMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) return;
+
+    const clear = () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
     };
 
-    const goToPrev = () => {
-        const isFirstSlide = currentIndex === 0;
-        const newIndex = isFirstSlide ? images.length - 1 : currentIndex - 1;
-        setCurrentIndex(newIndex);
-    };
+    clear();
 
-    const goToNext = () => {
-        const isLastSlide = currentIndex === images.length - 1;
-        const newIndex = isLastSlide ? 0 : currentIndex + 1;
-        setCurrentIndex(newIndex);
-    };
+    intervalRef.current = setInterval(() => {
+      const firstCard = container.querySelector('.first-section-card');
+      if (!firstCard) return;
 
-    return (
-        <section className="first-section">
-            <div className="slider-container">
-                <div className="slider" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
-                    {images.map((imgUrl, index) => (
-                        <div
-                            key={index}
-                            className="slider-slide"
-                            style={{ backgroundImage: `url(${imgUrl})` }}
-                        ></div>
-                    ))}
-                </div>
-                <div className="nav-container">
-                    <button onClick={goToPrev} data-index-change="-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                    </button>
-                    <div className="index-container">
-                        {images.map((_, index) => (
-                            <button
-                                key={index}
-                                className={currentIndex === index ? 'active' : ''}
-                                onClick={() => goToSlide(index)}
-                            ></button>
-                        ))}
-                    </div>
-                    <button onClick={goToNext} data-index-change="1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                    </button>
-                </div>
-            </div>
-        </section>
-    );
+      const cardWidth = firstCard.getBoundingClientRect().width;
+      const gapValue = getComputedStyle(container).gap;
+      const gap = parseFloat(String(gapValue).split(' ')[0]) || 0;
+      const step = cardWidth + gap;
+
+      const maxScrollLeft = container.scrollWidth - container.clientWidth;
+      const nextLeft = container.scrollLeft + step;
+
+      if (nextLeft >= maxScrollLeft - 2) {
+        container.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        container.scrollTo({ left: nextLeft, behavior: 'smooth' });
+      }
+    }, 3500);
+
+    return () => clear();
+  }, [displayItems.length]);
+
+  return (
+    <section className="first-section">
+      <div className="first-section-wrapper">
+        <div className="first-section-carousel" ref={carouselRef}>
+          {(loading ? FALLBACK_ITEMS : displayItems).map((item) => (
+            <article className="first-section-card" key={item.id}>
+              <img
+                src={item.imageUrl}
+                alt={item.titulo || 'Imagen'}
+                className="first-section-img"
+                loading="lazy"
+              />
+              <div className="first-section-caption">{item.titulo || ''}</div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 };
 
 export default ImageSlider;

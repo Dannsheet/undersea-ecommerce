@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { FaTachometerAlt, FaBoxOpen, FaClipboardList, FaUsers, FaChartBar } from 'react-icons/fa';
+import { FaTachometerAlt, FaBoxOpen, FaClipboardList, FaUsers, FaChartBar, FaImages } from 'react-icons/fa';
 import './AdminLayout.css';
 
 const AdminSidebar = ({ isOpen, toggleSidebar }) => {
@@ -24,6 +24,10 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
         <NavLink to="/admin/products" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
           <FaBoxOpen />
           <span>Productos</span>
+        </NavLink>
+        <NavLink to="/admin/first-section" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
+          <FaImages />
+          <span>Primera sección</span>
         </NavLink>
         <NavLink to="/admin/inventory" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
           <FaUsers />

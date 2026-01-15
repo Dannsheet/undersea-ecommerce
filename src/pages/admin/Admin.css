@@ -65,6 +65,25 @@
   color: white;
 }
 
+.form-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background-color: #ffffff;
+  color: #111827;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--button-primary-bg);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.form-input-file {
+  width: 100%;
+}
+
 /* --- Refined Admin Headers & Titles --- */
 /* --- Refined Admin Headers & Titles --- */
 .admin-header-alt {

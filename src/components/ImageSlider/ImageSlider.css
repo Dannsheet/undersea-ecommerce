@@ -1,79 +1,69 @@
 /* Imagenes rotativas */
-.slider-container {
-  position: relative;
-  overflow: hidden;
+.first-section {
   width: 100%;
-  height: 100vh;
-  background-color: var(--gris, #808080);
+  background: #ffffff;
 }
 
-.slider {
-  display: flex;
-  transition: transform 1s ease-in-out;
+.first-section-wrapper {
   width: 100%;
-  height: 100%;
-}
-
-.slider-slide {
-  flex: 0 0 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-.nav-container {
-  position: absolute;
-  bottom: 20px;
-  left: 0;
-  right: 0;
-  padding: 0 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 14px 16px 10px;
   box-sizing: border-box;
+}
+
+.first-section-carousel {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  opacity: 0;
-  transition: opacity .2s;
+  gap: 14px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 8px;
 }
 
-.slider-container:hover .nav-container {
-    opacity: 1;
+.first-section-carousel::-webkit-scrollbar {
+  display: none;
 }
 
-.index-container {
-    display: flex;
-    gap: 10px;
+.first-section-card {
+  flex: 0 0 auto;
+  width: clamp(140px, 24vw, 240px);
+  scroll-snap-align: start;
+  border-radius: 0;
 }
 
-.index-container > button {
-  width: 20px;
-  height: 20px;
-  border: none;
-  border-radius: 50%;
-  background-color: rgba(255,255,255,.3);
-  transition: background-color .2s;
-  cursor: pointer;
+.first-section-img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 0;
+  display: block;
+  background: #f3f4f6;
 }
 
-.index-container > button:hover,
-.index-container > button.active {
-  background-color: rgba(255,255,255,.7);
+.first-section-caption {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 13px;
+  color: #111827;
+  line-height: 1.2;
 }
 
-button[data-index-change] {
-  font-size: 40px;
-  color: white;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-}
-
-@media (max-width: 500px) {
-  .nav-container {
-    padding: 0 0 10px;
+@media (min-width: 1024px) {
+  .first-section-wrapper {
+    padding: 18px 20px 12px;
   }
-  
-  .index-container {
-    gap: 20px;
+
+  .first-section-carousel {
+    gap: 18px;
+  }
+
+  .first-section-card {
+    width: clamp(200px, 16vw, 280px);
+  }
+
+  .first-section-caption {
+    font-size: 14px;
   }
 }

@@ -24,6 +24,7 @@ import UserListAdmin from './pages/admin/UserListAdmin';
 import ProductEditPage from './pages/admin/ProductEditPage';
 import InventoryAdminPage from './pages/admin/InventoryAdminPage';
 import ReportsAdminPage from './pages/admin/ReportsAdminPage';
+import FirstSectionAdminPage from './pages/admin/FirstSectionAdminPage';
 import AuthRedirector from './components/AuthRedirector';
 import RecoveryRedirector from './components/RecoveryRedirector';
 
@@ -140,6 +141,7 @@ function App() {
               <Route path="products" element={<ProductListAdmin />} />
               <Route path="products/new" element={<ProductEditPage />} />
               <Route path="products/edit/:id" element={<ProductEditPage />} />
+              <Route path="first-section" element={<FirstSectionAdminPage />} />
               <Route path="orders" element={<OrderListAdmin />} />
               <Route path="users" element={<UserListAdmin />} />
               <Route path="inventory" element={<InventoryAdminPage />} />
