@@ -29,6 +29,10 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
           <FaImages />
           <span>Primera sección</span>
         </NavLink>
+        <NavLink to="/admin/portadas" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
+          <FaImages />
+          <span>Portadas</span>
+        </NavLink>
         <NavLink to="/admin/inventory" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
           <FaUsers />
           <span>Inventario</span>
