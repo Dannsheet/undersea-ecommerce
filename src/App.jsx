@@ -28,6 +28,8 @@ import FirstSectionAdminPage from './pages/admin/FirstSectionAdminPage';
 import PortadasAdminPage from './pages/admin/PortadasAdminPage';
 import AuthRedirector from './components/AuthRedirector';
 import RecoveryRedirector from './components/RecoveryRedirector';
+import ConditionalFooter from './components/ConditionalFooter';
+import LegalPage from './pages/LegalPage';
 
 import SideMenu from './components/SideMenu/SideMenu';
 import CartPage from './pages/CartPage';
@@ -116,6 +118,9 @@ function App() {
             <Route path="/categoria/:slug" element={<CategoryPage />} />
             <Route path="/producto/:id" element={<DetailsProduct />} />
             <Route path="/cart" element={<CartPage />} />
+            <Route path="/terminos-y-condiciones" element={<LegalPage title="Términos y condiciones" />} />
+            <Route path="/politicas-de-privacidad" element={<LegalPage title="Políticas de privacidad" />} />
+            <Route path="/cambios-y-devoluciones" element={<LegalPage title="Políticas de Cambios y Devoluciones" />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -150,6 +155,7 @@ function App() {
               <Route path="reports" element={<ReportsAdminPage />} />
             </Route>
           </Routes>
+          <ConditionalFooter />
         </SiteWrapper>
       </CartProvider>
     </Router>

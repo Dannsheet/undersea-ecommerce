@@ -18,6 +18,32 @@
     text-align: center;
     padding: 8px 0;
     font-size: 12px;
+    overflow: hidden;
+}
+
+.top-bar p {
+    margin: 0;
+    display: inline-block;
+    white-space: nowrap;
+    padding-left: 100%;
+    animation: topBarMarquee 14s linear infinite;
+    will-change: transform;
+}
+
+@keyframes topBarMarquee {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-100%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .top-bar p {
+        animation: none;
+        padding-left: 0;
+    }
 }
 
 .main-nav-container {

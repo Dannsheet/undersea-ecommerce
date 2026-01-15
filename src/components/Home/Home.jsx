@@ -12,11 +12,6 @@ const Home = () => {
                 <ProductsCarousel />
                 <ProductGrid />
             </main>
-            <footer className="footer">
-                <section>
-                    <p>© DANNY FLORES - Todos los derechos reservados.</p>
-                </section>
-            </footer>
         </>
     );
 };
