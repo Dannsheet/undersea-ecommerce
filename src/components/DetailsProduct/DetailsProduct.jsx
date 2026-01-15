@@ -143,10 +143,11 @@ const DetailsProduct = () => {
   };
 
   const handleWhatsAppOrder = () => {
-    const phoneNumber = 'TU_NUMERO_DE_TELEFONO'; // <-- REEMPLAZAR
+    const phoneNumber = '593963859875'; // <-- REEMPLAZAR
+    if (!product || !selectedColor || !selectedSize) return;
     const message = `Hola, estoy interesado en el producto: ${product.nombre} (Color: ${selectedColor}, Talla: ${selectedSize}). ¿Podrían darme más información?`;
     const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   // --- Renderizado ---

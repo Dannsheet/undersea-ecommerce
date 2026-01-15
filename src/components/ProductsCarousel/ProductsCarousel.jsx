@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabaseClient';
 import './ProductsCarousel.css';
 import { getPublicImageUrl } from '../../lib/getPublicImageUrl';
@@ -10,8 +11,6 @@ const calculateCardsPerView = () => {
     if (width >= 600) return 2;
     return 1;
 };
-
-import { useNavigate } from 'react-router-dom';
 const ProductsCarousel = () => {
     const navigate = useNavigate();
     const [products, setProducts] = useState([]);
@@ -109,7 +108,6 @@ const ProductsCarousel = () => {
                                 <div className="product-card" key={p.id} onClick={() => navigate(`/producto/${p.id}`)} style={{ cursor: 'pointer' }}>
   <img src={p.imagen_url} alt={p.nombre}/>
   <h2>{p.nombre}</h2>
-  <p>{p.descripcion}</p>
   <span className="price">${p.precio}</span>
 </div>
                             ))}
