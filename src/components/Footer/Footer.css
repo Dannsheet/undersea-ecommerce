@@ -16,7 +16,18 @@
   gap: 16px;
   justify-content: center;
   flex-wrap: wrap;
+  overflow: hidden;
   box-sizing: border-box;
+}
+
+@keyframes footerPaymentMarquee {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
 }
 
 .footer-payment-title {
@@ -30,8 +41,11 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  width: max-content;
+  will-change: transform;
+  animation: footerPaymentMarquee 14s linear infinite;
 }
 
 .footer-payment-icon {
@@ -43,6 +57,13 @@
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-payment-logos {
+    animation: none;
+    transform: none;
+  }
 }
 
 .footer-payment-bank-text {
@@ -63,27 +84,24 @@
   box-sizing: border-box;
 }
 
+@keyframes footerFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .site-footer-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(160px, 1fr));
   gap: 18px;
   align-items: start;
-}
-
-.footer-col-contact {
-  grid-area: contact;
-}
-
-.footer-col-site {
-  grid-area: site;
-}
-
-.footer-col-help {
-  grid-area: help;
-}
-
-.footer-col-social {
-  grid-area: social;
+  animation: footerFadeUp 520ms ease both;
 }
 
 .footer-col-title {
@@ -153,6 +171,8 @@
   align-items: center;
   font-size: 12px;
   opacity: 0.95;
+  animation: footerFadeUp 520ms ease both;
+  animation-delay: 120ms;
 }
 
 .site-footer-bottom .footer-link {
@@ -179,8 +199,31 @@
       "social social";
   }
 
+  .footer-col-contact {
+    grid-area: contact;
+  }
+
+  .footer-col-site {
+    grid-area: site;
+  }
+
+  .footer-col-help {
+    grid-area: help;
+  }
+
+  .footer-col-social {
+    grid-area: social;
+  }
+
   .site-footer-bottom {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-footer-grid,
+  .site-footer-bottom {
+    animation: none;
   }
 }
