@@ -7,6 +7,7 @@ const STORE_CONTACT = {
   email: 'info@underseapro.shop',
   phoneOrdersE164: '+593963859875',
   phoneDannyE164: '+593000000000',
+  developerWhatsApp: '+593000000000', // Reemplazar con tu número de WhatsApp
 };
 
 const SOCIAL_LINKS = {
@@ -17,8 +18,8 @@ const SOCIAL_LINKS = {
 
 const Footer = () => {
   const orderTelHref = `tel:${STORE_CONTACT.phoneOrdersE164}`;
-  const dannyTelHref = `tel:${STORE_CONTACT.phoneDannyE164}`;
   const mailHref = `mailto:${STORE_CONTACT.email}`;
+  const developerWhatsAppHref = `https://wa.me/${STORE_CONTACT.developerWhatsApp.replace(/[^\d]/g, '')}`;
 
   return (
     <div className="site-footer-wrapper">
@@ -86,9 +87,9 @@ const Footer = () => {
           </div>
 
           <div className="site-footer-bottom">
-            <span>Todos los derechos reservados DANNY FLORES</span>
-            <a className="footer-link" href={dannyTelHref}>
-              Contactar
+            <span>UNDERSEA 2026 © Todos los derechos reservados |</span>
+            <a className="footer-link" href={developerWhatsAppHref} target="_blank" rel="noreferrer">
+              Contactar desarrollador
             </a>
           </div>
         </div>
