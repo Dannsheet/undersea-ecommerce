@@ -54,7 +54,7 @@ const Navbar = ({ toggleMenu, categories }) => {
     return (
         <header className="header-container">
             <div className="top-bar">
-                <p>Envío gratis en la ciudad de Manta</p>
+                <p>🐟BIENVENIDO A UNDERSEA🐟 </p>
             </div>
             <div className="main-nav-container">
                 <div className="menu-icon" onClick={toggleMenu}>

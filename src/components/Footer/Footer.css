@@ -70,6 +70,22 @@
   align-items: start;
 }
 
+.footer-col-contact {
+  grid-area: contact;
+}
+
+.footer-col-site {
+  grid-area: site;
+}
+
+.footer-col-help {
+  grid-area: help;
+}
+
+.footer-col-social {
+  grid-area: social;
+}
+
 .footer-col-title {
   margin: 0 0 10px;
   font-size: 13px;
@@ -156,7 +172,11 @@
 
 @media (max-width: 520px) {
   .site-footer-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      "contact site"
+      "help help"
+      "social social";
   }
 
   .site-footer-bottom {

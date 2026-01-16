@@ -3,17 +3,17 @@ import { FaTiktok } from 'react-icons/fa6';
 import './Footer.css';
 
 const STORE_CONTACT = {
-  location: 'Manta, Ecuador',
-  email: 'info@underseapro.shop',
+  location: 'av. universitaria 2 calle 7',
+  email: 'underseaweb@gmail.com',
   phoneOrdersE164: '+593963859875',
   phoneDannyE164: '+593000000000',
-  developerWhatsApp: '+593000000000', // Reemplazar con tu número de WhatsApp
+  developerWhatsApp: '+593995826144', // Reemplazar con tu número de WhatsApp
 };
 
 const SOCIAL_LINKS = {
-  facebook: 'https://facebook.com/',
-  instagram: 'https://instagram.com/',
-  tiktok: 'https://tiktok.com/',
+  facebook: 'https://www.facebook.com/underseapro',
+  instagram: 'https://www.instagram.com/underseapro/',
+  tiktok: 'https://www.tiktok.com/@rosi_orosi?lang=es-419',
 };
 
 const Footer = () => {
@@ -40,25 +40,22 @@ const Footer = () => {
       <footer className="site-footer">
         <div className="site-footer-inner">
           <div className="site-footer-grid">
-            <div className="footer-col">
+            <div className="footer-col footer-col-contact">
               <h3 className="footer-col-title">CONTACTO</h3>
               <p className="footer-text">{STORE_CONTACT.location}</p>
               <a className="footer-link" href={mailHref}>
                 {STORE_CONTACT.email}
               </a>
-              <a className="footer-link" href={orderTelHref}>
-                {STORE_CONTACT.phoneOrdersE164}
-              </a>
             </div>
 
-            <div className="footer-col">
+            <div className="footer-col footer-col-help">
               <h3 className="footer-col-title">AYUDA</h3>
               <a className="footer-link" href={orderTelHref}>
                 Contáctenos
               </a>
             </div>
 
-            <div className="footer-col">
+            <div className="footer-col footer-col-site">
               <h3 className="footer-col-title">INFORMACIÓN DEL SITIO</h3>
               <a className="footer-link" href="/terminos-y-condiciones">
                 Términos y condiciones
@@ -71,7 +68,7 @@ const Footer = () => {
               </a>
             </div>
 
-            <div className="footer-col footer-social">
+            <div className="footer-col footer-col-social footer-social">
               <div className="footer-social-icons">
                 <a className="footer-social-link" href={SOCIAL_LINKS.facebook} target="_blank" rel="noreferrer">
                   <FaFacebookF aria-label="Facebook" />
