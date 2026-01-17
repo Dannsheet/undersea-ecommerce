@@ -4,7 +4,7 @@ import './Footer.css';
 
 const STORE_CONTACT = {
   location: 'av. universitaria 2 calle 7',
-  email: 'underseaweb@gmail.com',
+  email: 'underseapro@gmail.com',
   phoneOrdersE164: '+593963859875',
   phoneDannyE164: '+593000000000',
   developerWhatsApp: '+593995826144', // Reemplazar con tu número de WhatsApp
